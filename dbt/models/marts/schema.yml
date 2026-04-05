@@ -1,0 +1,29 @@
+version: 2
+
+models:
+  - name: fct_weather_metrics
+    description: "Tabela de fato com métricas meteorológicas processadas"
+    columns:
+      - name: id
+        tests: [not_null, unique]
+      - name: city
+        tests: [not_null]
+      - name: collected_date
+        tests: [not_null]
+      - name: temperature
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: -20
+              max_value: 60
+      - name: humidity
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 100
+      - name: temperature_category
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['frio', 'agradável', 'quente', 'muito quente']

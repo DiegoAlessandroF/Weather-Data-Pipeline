@@ -37,5 +37,9 @@ models:
     marts:
       +materialized: table
       +schema: marts
+
+seeds:
+  weather_analytics:
+    +schema: marts
     # Config indicated by + and applies to all files under models/example/
     

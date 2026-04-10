@@ -1,11 +1,29 @@
 from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.operators.bash import BashOperator
+from airflow.utils.email import send_email
+
+def alerta_falha(context):
+    dag_id = context['dag'].dag_id
+    task_id = context['task'].task_id
+    execution_date = context['execution_date']
+    log_url = context['task_instance'].log_url
+
+    subject = f'❌ Falha no pipeline {dag_id} – {task_id}'
+    body = f"""
+    <h3>Task falhou</h3
+    <b>DAG:</b> {dag_id}<br>
+    <b>Task:</b> {task_id}<br>
+    <b>Data:</b> {execution_date}<br>
+    <b>Log:</b> <a href="{log_url}">Ver log</a>
+    """
+    send_email(to='diegodataeng@outlook.com', subject=subject, html_content=body)
 
 default_args = {
     'owner': 'diego',
     'retries': 1,
-    'retry_delay': timedelta(minutes=5),
+    'retry_delay': timedelta(minutes=1),
+    'on_failure_callback': alerta_falha,
 }
 
 with DAG(

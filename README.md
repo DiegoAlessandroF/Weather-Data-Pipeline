@@ -72,7 +72,7 @@ airflow users create --username admin --password admin \
 sudo systemctl start airflow-webserver airflow-scheduler
 ```
 
-Acessar em: `http://localhost:8080`
+Acessar em: `http://localhost:8080` ou `http://SEU_IP_PUBLICO:8080`
 
 ## Rodando manualmente
 

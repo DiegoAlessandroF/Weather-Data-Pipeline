@@ -1,3 +1,4 @@
+import os
 from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.operators.bash import BashOperator
@@ -11,13 +12,13 @@ def alerta_falha(context):
 
     subject = f'❌ Falha no pipeline {dag_id} – {task_id}'
     body = f"""
-    <h3>Task falhou</h3
+    <h3>Task falhou</h3>
     <b>DAG:</b> {dag_id}<br>
     <b>Task:</b> {task_id}<br>
     <b>Data:</b> {execution_date}<br>
     <b>Log:</b> <a href="{log_url}">Ver log</a>
     """
-    send_email(to='diegodataeng@outlook.com', subject=subject, html_content=body)
+    send_email(to=os.getenv('ALERT_EMAIL'), subject=subject, html_content=body)
 
 default_args = {
     'owner': 'diego',
@@ -48,7 +49,7 @@ with DAG(
 
     dbt_test = BashOperator(
         task_id='dbt_test',
-        bash_command='cd /home/ubuntu/weather-pipeline/dbt && /home/ubuntu/weather-pipeline/.venv/bin/dbt run',
+        bash_command='cd /home/ubuntu/weather-pipeline/dbt && /home/ubuntu/weather-pipeline/.venv/bin/dbt test',
     )
 
     coleta >> dbt_run >> dbt_test

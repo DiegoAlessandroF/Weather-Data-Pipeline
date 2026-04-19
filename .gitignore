@@ -1,5 +1,8 @@
 .env
+*.dump
+*.venv
 __pycache__/
-*.pyc
-.venv/
-data/
+dbt/target/
+dbt/logs/
+dbt/profiles/
+data/raw/

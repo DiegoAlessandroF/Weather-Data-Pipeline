@@ -39,17 +39,17 @@ with DAG(
 
     coleta = BashOperator(
         task_id='coleta_dados',
-        bash_command='cd /home/ubuntu/weather-pipeline && /home/ubuntu/weather-pipeline/.venv/bin/python -m ingestion.collect',
+        bash_command='cd /opt/airflow && python -m ingestion.collect',
     )
 
     dbt_run = BashOperator(
         task_id='dbt_run',
-        bash_command='cd /home/ubuntu/weather-pipeline/dbt && /home/ubuntu/weather-pipeline/.venv/bin/dbt run',
+        bash_command='dbt run --project-dir /opt/airflow/dbt --profiles-dir /opt/airflow/.dbt'
     )
 
     dbt_test = BashOperator(
         task_id='dbt_test',
-        bash_command='cd /home/ubuntu/weather-pipeline/dbt && /home/ubuntu/weather-pipeline/.venv/bin/dbt test',
+        bash_command='dbt test --project-dir /opt/airflow/dbt --profiles-dir /opt/airflow/.dbt',
     )
 
     coleta >> dbt_run >> dbt_test

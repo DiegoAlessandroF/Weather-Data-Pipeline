@@ -18,13 +18,13 @@ Projeto de portfólio para qualificação em vagas de engenharia de dados.
 
 ## Arquitetura
 
-OpenWeather API
-↓
-collect.py → raw.weather_metrics (PostgreSQL)
-↓
-dbt → staging.stg_weather_metrics → marts.fct_weather_metrics
-↓
-Airflow DAG (coleta_dados → dbt_run → dbt_test)
+    OpenWeather API
+    ↓
+    collect.py → raw.weather_metrics (PostgreSQL)
+    ↓
+    dbt → staging.stg_weather_metrics → marts.fct_weather_metrics
+    ↓
+    Airflow DAG (coleta_dados → dbt_run → dbt_test)
 
 ## Estrutura do projeto
 

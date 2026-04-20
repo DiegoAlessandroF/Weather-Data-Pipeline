@@ -27,27 +27,28 @@ dbt → staging.stg_weather_metrics → marts.fct_weather_metrics
 Airflow DAG (coleta_dados → dbt_run → dbt_test)
 
 ## Estrutura do projeto
-weather-pipeline/
-├── ingestion/
-│   ├── collect.py        # coleta dados das 5 cidades via API
-│   └── load.py           # insere os dados no PostgreSQL
-├── dbt/
-│   ├── models/
-│   │   ├── staging/      # view com colunas renomeadas
-│   │   └── marts/        # tabela fato com lógica de negócio
-│   ├── seeds/
-│   │   └── dim_cities.csv
-│   └── macros/
-│       └── generate_schema_name.sql
-├── airflow/
-│   └── dags/
-│       └── weather_pipeline.py
-├── sql/
-│   └── init/
-│       └── 01_setup.sql  # criação de usuários e bancos
-├── Dockerfile            # imagem customizada Airflow + dbt
-├── docker-compose.yml    # postgres, airflow, metabase
-└── .env.example
+
+    weather-pipeline/
+    ├── ingestion/
+    │   ├── collect.py        # coleta dados das 5 cidades via API
+    │   └── load.py           # insere os dados no PostgreSQL
+    ├── dbt/
+    │   ├── models/
+    │   │   ├── staging/      # view com colunas renomeadas
+    │   │   └── marts/        # tabela fato com lógica de negócio
+    │   ├── seeds/
+    │   │   └── dim_cities.csv
+    │   └── macros/
+    │       └── generate_schema_name.sql
+    ├── airflow/
+    │   └── dags/
+    │       └── weather_pipeline.py
+    ├── sql/
+    │   └── init/
+    │       └── 01_setup.sql  # criação de usuários e bancos
+    ├── Dockerfile            # imagem customizada Airflow + dbt
+    ├── docker-compose.yml    # postgres, airflow, metabase
+    └── .env.example
 
 ## Setup com Docker
 

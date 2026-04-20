@@ -31,7 +31,7 @@ with DAG(
     dag_id='weather_pipeline',
     default_args=default_args,
     description='Pipeline meteorológico – coleta, carrega e transforma',
-    schedule_interval='0 6 * * *',   #todo dia às 6h UTC
+    schedule_interval='0 0,6,12,18 * * *',   # 0h, 6h, 12h e 18h horário de Brasília
     start_date=datetime(2026, 1, 1),
     catchup=False,
     tags=['weather', 'pipeline'],

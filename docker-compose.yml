@@ -13,6 +13,7 @@ x-airflow-common: &airflow-common
     AIRFLOW__SMTP__SMTP_MAIL_FROM: ${SMTP_USER}
     AIRFLOW__SMTP__SMTP_SSL: 'false'
     AIRFLOW__SMTP__SMTP_STARTTLS: 'true'
+    AIRFLOW__CORE__DEFAULT_TIMEZONE: America/Sao_Paulo
     OPENWEATHER_API_KEY: ${OPENWEATHER_API_KEY}
     DB_HOST: postgres
     DB_PORT: '5432'

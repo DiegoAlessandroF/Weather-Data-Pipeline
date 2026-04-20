@@ -54,9 +54,11 @@ Airflow DAG (coleta_dados → dbt_run → dbt_test)
 
 ### Pré-requisitos
 
-- Docker Desktop (ou Docker Engine + Compose plugin)
-- Conta OpenWeather API (gratuita)
-- Conta Gmail com senha de app configurada (para alertas)
+- Docker:
+  - **Windows/Mac:** Docker Desktop 4.0+ (já inclui o Compose)
+  - **Linux:** Docker Engine 20.10+ + docker-compose-plugin (Compose v2.0+)
+- Conta na [OpenWeather API](https://openweathermap.org/api) (plano gratuito)
+- Conta Gmail com [senha de app](https://myaccount.google.com/apppasswords) configurada (para alertas de falha)
 
 ### Instalação
 

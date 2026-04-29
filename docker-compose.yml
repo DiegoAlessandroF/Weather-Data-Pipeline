@@ -52,12 +52,12 @@ services:
 
   airflow-init:
     <<: *airflow-common
-    command: bash -c "pip install dbt-postgres psycopg2-binary python-dotenv requests && airflow db init && airflow users create --username diego --password weather_pass --firstname Diego --lastname Admin --role Admin --email ${ALERT_EMAIL}" 
+    command: bash -c "airflow db init && airflow users create --username diego --password weather_pass --firstname Diego --lastname Admin --role Admin --email ${ALERT_EMAIL}" 
     restart: "no"
 
   airflow-webserver:
     <<: *airflow-common
-    command: webserver
+    command: webserver --workers 1
     ports:
       - "8080:8080"
     restart: always

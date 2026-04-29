@@ -109,7 +109,14 @@ docker compose up airflow-init
 docker compose up -d
 ```
 
-6. Instale as dependências do dbt
+6. Conceda as permissões para o Airflow acessar as pastas do dbt
+
+```bash
+sudo chown -R 50000:0 ~/weather-pipeline/dbt
+```
+> O container do Airflow roda como UID 50000. Sem isso, o dbt falha silenciosamente.
+
+7. Instale as dependências do dbt
 
 ```bash
 docker compose exec airflow-scheduler dbt deps \
@@ -117,7 +124,7 @@ docker compose exec airflow-scheduler dbt deps \
   --profiles-dir /opt/airflow/.dbt
 ```
 
-7. Verifique os serviços
+8. Verifique os serviços
 
 ```bash
 docker compose ps

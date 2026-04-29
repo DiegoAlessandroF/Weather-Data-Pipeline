@@ -6,4 +6,4 @@ dbt/target/
 dbt/logs/
 dbt/profiles/profiles.yml
 dbt/profiles/.user.yml
-data/raw/
+logs/

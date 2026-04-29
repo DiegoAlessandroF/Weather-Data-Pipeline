@@ -1,3 +1,5 @@
+\c weather_db
+
 CREATE TABLE IF NOT EXISTS  raw.weather_metrics (
     
     id              SERIAL PRIMARY KEY,

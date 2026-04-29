@@ -52,7 +52,7 @@ services:
 
   airflow-init:
     <<: *airflow-common
-    command: bash -c "airflow db init && airflow users create --username diego --password weather_pass --firstname Diego --lastname Admin --role Admin --email ${ALERT_EMAIL}" 
+    command: bash -c "airflow db init && airflow users create --username admin --password weather_pass --firstname Diego --lastname Admin --role Admin --email ${ALERT_EMAIL}" 
     restart: "no"
 
   airflow-webserver:

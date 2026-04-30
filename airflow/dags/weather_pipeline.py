@@ -34,6 +34,7 @@ with DAG(
     schedule_interval='0 0,6,12,18 * * *',   # 0h, 6h, 12h e 18h horário de Brasília
     start_date=datetime(2026, 1, 1),
     catchup=False,
+    is_paused_upon_creation=False,
     tags=['weather', 'pipeline'],
 ) as dag:
 

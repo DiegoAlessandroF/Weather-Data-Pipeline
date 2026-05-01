@@ -1,0 +1,7 @@
+\c weather_db
+
+GRANT ALL PRIVILEGES ON SCHEMA raw TO pipeline_user;
+GRANT ALL PRIVILEGES ON SCHEMA staging TO pipeline_user;
+GRANT ALL PRIVILEGES ON SCHEMA marts TO pipeline_user;
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA raw TO pipeline_user;
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA raw TO pipeline_user;

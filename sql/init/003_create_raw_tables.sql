@@ -1,5 +1,6 @@
-CREATE TABLE IF NOT EXISTS  raw.weather_metrics (
-    
+\c weather_db
+
+CREATE TABLE IF NOT EXISTS raw.weather_metrics (
     id              SERIAL PRIMARY KEY,
     city            TEXT NOT NULL,
     country         TEXT NOT NULL,
@@ -13,4 +14,7 @@ CREATE TABLE IF NOT EXISTS  raw.weather_metrics (
     wind_speed      FLOAT,
     cloudiness      INT,
     loaded_at       TIMESTAMP DEFAULT NOW()
-)
+);
+
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA raw TO pipeline_user;
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA raw TO pipeline_user;

@@ -10,7 +10,7 @@ Projeto de portfólio para qualificação em vagas de engenharia de dados.
 |---|---|
 | Python 3.10 | Scripts de coleta e ingestão |
 | PostgreSQL 14 | Banco de dados (raw → staging → marts) |
-| dbt-postgres 1.10 | Transformações SQL e testes de qualidade |
+| dbt-postgres 1.8.0 | Transformações SQL e testes de qualidade |
 | Apache Airflow 2.9 | Orquestração da pipeline |
 | Docker + Compose | Containerização de todos os serviços |
 | AWS EC2 t3.medium | Infraestrutura cloud (sa-east-1) |
@@ -29,25 +29,39 @@ Projeto de portfólio para qualificação em vagas de engenharia de dados.
 ## Estrutura do projeto
 
     weather-pipeline/
-    ├── ingestion/
-    │   ├── collect.py        # coleta dados das 5 cidades via API
-    │   └── load.py           # insere os dados no PostgreSQL
-    ├── dbt/
-    │   ├── models/
-    │   │   ├── staging/      # view com colunas renomeadas
-    │   │   └── marts/        # tabela fato com lógica de negócio
-    │   ├── seeds/
-    │   │   └── dim_cities.csv
-    │   └── macros/
-    │       └── generate_schema_name.sql
     ├── airflow/
     │   └── dags/
-    │       └── weather_pipeline.py
+    │       └── weather_pipeline.py     # DAG de orquestração
+    ├── dbt/
+    │   ├── macros/
+    │   │   └── generate_schema_name.sql
+    │   ├── models/
+    │   │   ├── marts/
+    │   │   │   ├── fct_weather_metrics.sql
+    │   │   │   └── schema.yml
+    │   │   └── staging/
+    │   │       ├── schema.yml
+    │   │       ├── sources.yml
+    │   │       └── stg_weather_metrics.sql
+    │   ├── profiles/
+    │   │   └── profiles.yml.example    # template — copiar para profiles.yml
+    │   ├── seeds/
+    │   │   └── dim_cities.csv
+    │   ├── dbt_project.yml
+    │   ├── package-lock.yml
+    │   └── packages.yml
+    ├── ingestion/
+    │   ├── collect.py                  # coleta dados das 5 cidades via API
+    │   └── load.py                     # insere os dados no PostgreSQL
     ├── sql/
     │   └── init/
-    │       └── 01_setup.sql  # criação de usuários e bancos
-    ├── Dockerfile            # imagem customizada Airflow + dbt
-    ├── docker-compose.yml    # postgres, airflow, metabase
+    │       ├── 000_setup.sql           # criação de usuários e bancos
+    │       ├── 001_create_schemas.sql  # criação dos schemas
+    │       ├── 002_create_user.sql     # permissões do pipeline_user
+    │       └── 003_create_raw_tables.sql
+    ├── Dockerfile                      # imagem customizada Airflow + dbt
+    ├── docker-compose.yml              # postgres, airflow, metabase
+    ├── requirements.txt
     └── .env.example
 
 ## Setup com Docker
@@ -76,19 +90,41 @@ cp .env.example .env
 # editar .env com suas credenciais
 ```
 
-3. Inicialize o Airflow
+3. Configure o profiles.yml do dbt
+
+```bash
+cp dbt/profiles/profiles.yml.example dbt/profiles/profiles.yml
+# editar se necessário — as credenciais padrão já funcionam para o ambiente local
+```
+
+4. Inicialize o Airflow
 
 ```bash
 docker compose up airflow-init
 ```
 
-4. Suba todos os serviços
+5. Suba todos os serviços
 
 ```bash
 docker compose up -d
 ```
 
-5. Verifique os serviços
+6. Conceda as permissões para o Airflow acessar as pastas do dbt
+
+```bash
+sudo chown -R 50000:0 ~/weather-pipeline/dbt
+```
+> O container do Airflow roda como UID 50000. Sem isso, o dbt falha silenciosamente.
+
+7. Instale as dependências do dbt
+
+```bash
+docker compose exec airflow-scheduler dbt deps \
+  --project-dir /opt/airflow/dbt \
+  --profiles-dir /opt/airflow/.dbt
+```
+
+8. Verifique os serviços
 
 ```bash
 docker compose ps
@@ -98,7 +134,7 @@ docker compose ps
 
 | Serviço | URL | Credenciais |
 |---|---|---|
-| Airflow | http://localhost:8080 | diego / weather_pass |
+| Airflow | http://localhost:8080 | admin / weather_pass |
 | Metabase | http://localhost:3000 | — |
 | PostgreSQL | localhost:5432 | pipeline_user / pipeline_pass |
 
@@ -149,5 +185,5 @@ docker compose exec airflow-scheduler dbt run \
 
 ## Alertas
 
-Email automático via Gmail em caso de falha em qualquer task do Airflow,
-com link direto para o log da task.
+Email automático enviado via Gmail (remetente configurado no SMTP_USER) para o destinatário 
+definido em ALERT_EMAIL em caso de falha em qualquer task do Airflow, com link direto para o log da task.

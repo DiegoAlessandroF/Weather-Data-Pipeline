@@ -59,6 +59,8 @@ Projeto de portfólio para qualificação em vagas de engenharia de dados.
     │       ├── 001_create_schemas.sql  # criação dos schemas
     │       ├── 002_create_user.sql     # permissões do pipeline_user
     │       └── 003_create_raw_tables.sql
+    ├── docs/
+    │   └── images/                     # prints do projeto
     ├── Dockerfile                      # imagem customizada Airflow + dbt
     ├── docker-compose.yml              # postgres, airflow, metabase
     ├── requirements.txt
@@ -185,5 +187,23 @@ docker compose exec airflow-scheduler dbt run \
 
 ## Alertas
 
-Email automático enviado via Gmail (remetente configurado no SMTP_USER) para o destinatário 
+Email automático enviado via Gmail (remetente configurado no SMTP_USER) para o destinatário
 definido em ALERT_EMAIL em caso de falha em qualquer task do Airflow, com link direto para o log da task.
+
+## Pipeline em funcionamento
+
+### Airflow — tasks executadas com sucesso
+
+![Airflow Tasks](<docs/images/Captura de tela airflow tasks.png>)
+
+### Airflow — runs executadas com sucesso
+![Airflow Runs](<docs/images/Captura de tela airflow runs.png>)
+
+
+### Metabase — registros coletados
+
+![Tabela de Registros](<docs/images/Captura de tela tabela.png>)
+
+### Metabase — dashboard de temperatura
+
+![Dashboard Temperatura Tema Escuro](<docs/images/Captura de tela dashboard temperatura preto.png>)

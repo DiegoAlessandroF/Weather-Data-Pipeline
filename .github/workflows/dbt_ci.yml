@@ -1,0 +1,79 @@
+name: dbt CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  dbt-test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Instalar dependências
+        run: |
+          pip install dbt-postgres==1.8.0 --no-deps
+          pip install dbt-core==1.8.2 dbt-adapters==1.0.0 dbt-common==1.0.0 agate psycopg2-binary==2.9.11
+
+      - name: Rodar scripts de init do PostgreSQL
+        env:
+          PGPASSWORD: postgres
+        run: |
+          psql -h localhost -U postgres -f sql/init/000_setup.sql
+          psql -h localhost -U postgres -f sql/init/001_create_schemas.sql
+          psql -h localhost -U postgres -f sql/init/002_create_user.sql
+          psql -h localhost -U postgres -f sql/init/003_create_raw_tables.sql
+
+      - name: Criar profiles.yml
+        run: |
+          mkdir -p ~/.dbt
+          cat > ~/.dbt/profiles.yml << EOF
+          weather_analytics:
+            target: ci
+            outputs:
+              ci:
+                type: postgres
+                host: localhost
+                port: 5432
+                dbname: weather_db
+                user: pipeline_user
+                password: pipeline_pass
+                schema: staging
+                threads: 1
+          EOF
+
+      - name: dbt deps
+        run: dbt deps --project-dir dbt --profiles-dir ~/.dbt
+
+      - name: dbt seed
+        run: dbt seed --project-dir dbt --profiles-dir ~/.dbt
+
+      - name: dbt run
+        run: dbt run --project-dir dbt --profiles-dir ~/.dbt
+
+      - name: dbt test
+        run: dbt test --project-dir dbt --profiles-dir ~/.dbt

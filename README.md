@@ -1,5 +1,5 @@
 # Weather Pipeline
-
+![dbt CI](https://github.com/DiegoAlessandroF/weather-pipeline/actions/workflows/dbt_ci.yml/badge.svg)
 Pipeline de dados meteorológicos que coleta dados de 5 cidades brasileiras via OpenWeather API,
 armazena no PostgreSQL, transforma com dbt e orquestra com Airflow.
 Projeto de portfólio para qualificação em vagas de engenharia de dados.

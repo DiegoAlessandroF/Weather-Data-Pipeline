@@ -37,7 +37,7 @@ jobs:
       - name: Instalar dependências
         run: |
           pip install dbt-postgres==1.8.0 --no-deps
-          pip install dbt-core==1.8.2 dbt-adapters==1.0.0 dbt-common==1.0.4 agate psycopg2-binary==2.9.11
+          pip install dbt-core==1.8.2 psycopg2-binary==2.9.11
 
       - name: Rodar scripts de init do PostgreSQL
         env:

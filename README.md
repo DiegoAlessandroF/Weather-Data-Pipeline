@@ -81,7 +81,7 @@ Projeto de portfólio para qualificação em vagas de engenharia de dados.
 1. Clone o repositório
 
 ```bash
-git clone https://github.com/seu-usuario/weather-pipeline.git
+git clone https://github.com/DiegoAlessandroF/weather-pipeline.git
 cd weather-pipeline
 ```
 

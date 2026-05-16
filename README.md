@@ -1,5 +1,6 @@
 # Weather Pipeline
 ![dbt CI](https://github.com/DiegoAlessandroF/weather-pipeline/actions/workflows/dbt_ci.yml/badge.svg)
+
 Pipeline de dados meteorológicos que coleta dados de 5 cidades brasileiras via OpenWeather API,
 armazena no PostgreSQL, transforma com dbt e orquestra com Airflow.
 Projeto de portfólio para qualificação em vagas de engenharia de dados.
@@ -13,7 +14,7 @@ Projeto de portfólio para qualificação em vagas de engenharia de dados.
 | dbt-postgres 1.8.0 | Transformações SQL e testes de qualidade |
 | Apache Airflow 2.9 | Orquestração da pipeline |
 | Docker + Compose | Containerização de todos os serviços |
-| AWS EC2 t3.medium | Infraestrutura cloud (sa-east-1) |
+| AWS EC2 t3.medium | Infraestrutura cloud (us-east-1) |
 | Metabase | Visualização dos dados |
 
 ## Arquitetura
@@ -73,6 +74,12 @@ Projeto de portfólio para qualificação em vagas de engenharia de dados.
 - Docker:
   - **Windows/Mac:** Docker Desktop 4.0+ (já inclui o Compose)
   - **Linux:** Docker Engine 20.10+ + docker-compose-plugin (Compose v2.0+)
+  Após instalar o Docker Engine, execute:
+```bash
+  sudo usermod -aG docker $USER
+  sudo reboot
+```
+  Sem isso os comandos `docker compose` retornam `permission denied`.
 - Conta na [OpenWeather API](https://openweathermap.org/api) (plano gratuito)
 - Conta Gmail com [senha de app](https://myaccount.google.com/apppasswords) configurada (para alertas de falha)
 
@@ -150,11 +157,16 @@ AIRFLOW_UID=1000
 
 ## Rodando manualmente
 
+> ⚠️ Os comandos `airflow` e `dbt` não existem no host — rodam sempre dentro do container.
+
 ```bash
-# Disparar a DAG completa via Airflow
+# Disparar a DAG via UI
 # Acessar http://localhost:8080 → weather_pipeline → Trigger DAG
 
-# Ou rodar o dbt direto no container
+# Disparar a DAG via CLI
+docker compose exec airflow-scheduler airflow dags trigger weather_pipeline
+
+# Rodar o dbt direto no container
 docker compose exec airflow-scheduler dbt run \
   --project-dir /opt/airflow/dbt \
   --profiles-dir /opt/airflow/.dbt
